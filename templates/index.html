@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Face Blur App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        h1 {
+            background-color: #4CAF50;
+            color: white;
+            padding: 1rem;
+            margin: 0;
+        }
+
+        h2 {
+            color: #333;
+            margin-top: 2rem;
+        }
+
+        form {
+            margin: 2rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+        }
+
+        input[type="file"],
+        select, 
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            margin: 1rem 0;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 1rem;
+        }
+
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        .messages ul {
+            list-style: none;
+            padding: 0;
+            color: white;
+            background-color: #4CAF50;
+            margin: 1rem 0;
+            border-radius: 5px;
+        }
+
+        .messages ul li {
+            padding: 10px;
+        }
+
+        .extracted-faces {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 1rem 0;
+        }
+
+        .extracted-faces img {
+            margin: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+        }
+
+        @media (max-width: 600px) {
+            form {
+                width: 95%;
+            }
+
+            input[type="file"],
+            select,
+            input[type="submit"] {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Face Blur App</h1>
+    
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="messages">
+                <ul>
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+    {% endwith %}
+    
+    <h2>Upload Image</h2>
+    <form action="{{ url_for('upload_image') }}" method="post" enctype="multipart/form-data">
+        <input type="file" name="image" accept="image/*" required>
+        <input type="submit" value="Upload Image">
+    </form>
+
+    {% if extracted_faces %}
+    <h2>Extracted Faces</h2>
+    <div class="extracted-faces">
+        {% for face in extracted_faces %}
+            <img src="{{ url_for('static', filename='extracted_faces/' + face) }}" alt="Extracted Face" width="150">
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <h2>Upload Video</h2>
+    <form action="{{ url_for('upload_video') }}" method="post" enctype="multipart/form-data">
+        <input type="file" name="video" accept="video/*" required>
+
+        <label for="threshold">Select Similarity Threshold (Recommended 0.5):</label>
+        <select name="threshold" id="threshold">
+            {% for i in range(0, 11) %}
+                <option value="{{ i / 10 }}">{{ i / 10 }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="blur_method">Select Blur Method (Recommended: Gaussian):</label>
+        <select name="blur_method" id="blur_method" required>
+            <option value="gaussian">Gaussian Blur</option>
+            <option value="median">Median Blur</option>
+            <option value="bilateral">Bilateral Blur</option>
+        </select>
+        
+        <input type="submit" value="Upload Video">
+    </form>
+
+    <h2>Clear Data</h2>
+    <form action="{{ url_for('clear') }}" method="post">
+        <input type="submit" value="Clear All Data">
+    </form>
+</body>
+</html>

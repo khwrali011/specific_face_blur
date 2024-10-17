@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download Processed Video</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        h1 {
+            background-color: #4CAF50;
+            color: white;
+            padding: 1rem;
+            margin: 0;
+        }
+
+        a {
+            display: inline-block;
+            margin: 2rem auto;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        a:hover {
+            background-color: #45a049;
+        }
+
+        .messages ul {
+            list-style: none;
+            padding: 0;
+            color: white;
+            background-color: #4CAF50;
+            margin: 1rem 0;
+            border-radius: 5px;
+        }
+
+        .messages ul li {
+            padding: 10px;
+        }
+
+        .links {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        @media (max-width: 600px) {
+            a {
+                font-size: 1rem;
+                padding: 8px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Download Processed Video</h1>
+    
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="messages">
+                <ul>
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+    {% endwith %}
+    
+    <div class="links">
+        <a href="{{ url_for('download_video') }}">Download Processed Video</a>
+        <a href="{{ url_for('index') }}">Back to Home</a>
+    </div>
+</body>
+</html>
